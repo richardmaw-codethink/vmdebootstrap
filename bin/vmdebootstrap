@@ -56,13 +56,13 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
         self.user_mask = None
         self.handlers = {
             Base.name: Base(),
-            Uefi.name: Uefi(),
             Codenames.name: Codenames(),
             GrubHandler.name: GrubHandler(),
             ExtLinux.name: ExtLinux(),
             Filesystem.name: Filesystem(),
             Networking.name: Networking(),
         }
+        self.handlers[Uefi.name] = Uefi(self.handlers[Codenames.name])
 
     def add_settings(self):
         # deliberately long lines for clarity.

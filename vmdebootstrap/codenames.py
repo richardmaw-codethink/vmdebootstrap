@@ -46,6 +46,12 @@ class Codenames(Base):
             return distro
         return suite
 
+    def distributor_of(self, distro):
+        distro = self.suite_to_codename(distro)
+        if self.ubuntu_info.valid(distro):
+            return 'ubuntu'
+        return 'debian'
+
     def was_oldstable(self, limit):
         suite = self.suite_to_codename(self.settings['distribution'])
         # this check is only for debian

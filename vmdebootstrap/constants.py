@@ -24,7 +24,10 @@
 arch_table = {  # pylint: disable=invalid-name
     'amd64': {
         'removable': '/EFI/boot/bootx64.efi',  # destination location
-        'install': '/EFI/debian/grubx64.efi',  # package location
+        'install': {  # package location
+            'debian': '/EFI/debian/grubx64.efi',
+            'ubuntu': '/EFI/ubuntu/grubx64.efi',
+        },
         'package': 'grub-efi-amd64',  # bootstrap package
         'bin_package': 'grub-efi-amd64-bin',  # binary only
         'extra': 'i386',  # architecture to add binary package
@@ -33,7 +36,10 @@ arch_table = {  # pylint: disable=invalid-name
     },
     'i386': {
         'removable': '/EFI/boot/bootia32.efi',
-        'install': '/EFI/debian/grubia32.efi',
+        'install': {
+            'debian': '/EFI/debian/grubia32.efi',
+            'ubuntu': '/EFI/ubuntu/grubia32.efi',
+        },
         'package': 'grub-efi-ia32',
         'bin_package': 'grub-efi-ia32-bin',
         'extra': None,
@@ -42,7 +48,10 @@ arch_table = {  # pylint: disable=invalid-name
     },
     'arm64': {
         'removable': '/EFI/boot/bootaa64.efi',
-        'install': '/EFI/debian/grubaa64.efi',
+        'install': {
+            'debian': '/EFI/debian/grubaa64.efi',
+            'ubuntu': '/EFI/ubuntu/grubaa64.efi',
+        },
         'package': 'grub-efi-arm64',
         'bin_package': 'grub-efi-arm64-bin',
         'extra': None,

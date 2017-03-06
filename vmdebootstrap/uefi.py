@@ -40,9 +40,10 @@ class Uefi(Base):
 
     name = 'uefi'
 
-    def __init__(self):
+    def __init__(self, codenames):
         super(Uefi, self).__init__()
         self.bootdir = None
+        self.codenames = codenames
 
     def check_settings(self, oldstable=False):
         if not self.settings['use-uefi'] and self.settings['esp-size'] != 5242880:
@@ -114,12 +115,15 @@ class Uefi(Base):
         Copy the bootloader file from the package into the location
         so needs to be after grub and kernel already installed.
         """
-        if self.settings['arch'] not in arch_table:
+        arch = self.settings['arch']
+        if arch not in arch_table:
             return
         self.message('Configuring EFI')
         mount_wrapper(rootdir)
-        efi_removable = str(arch_table[self.settings['arch']]['removable'])
-        efi_install = str(arch_table[self.settings['arch']]['install'])
+        distributor = self.codenames.distributor_of(
+                self.settings['distribution'])
+        efi_removable = str(arch_table[arch]['removable'])
+        efi_install = str(arch_table[arch]['install'][distributor])
         self.message('Installing UEFI support binary')
         logging.debug("moving %s to %s", efi_removable, efi_install)
         try:
@@ -133,8 +137,10 @@ class Uefi(Base):
         extra = arch_table[self.settings['arch']]['extra']
         if extra:
             mount_wrapper(rootdir)
+            distributor = self.codenames.distributor_of(
+                    self.settings['distribution'])
             efi_removable = str(arch_table[extra]['removable'])
-            efi_install = str(arch_table[extra]['install'])
+            efi_install = str(arch_table[extra]['install'][distributor])
             self.message('Copying UEFI support binary for %s' % extra)
             try:
                 self.copy_efi_binary(efi_removable, efi_install)
