@@ -106,12 +106,12 @@ class GrubHandler(Base):
         ret = True
         self.message("Configuring grub-uefi")
         target = arch_table[self.settings['arch']]['target']
-        grub_opts = "--target=%s" % target
+        grub_opts = ["--target=%s" % target, "--no-nvram"]
         logging.debug("Running grub-install with options: %s", grub_opts)
         mount_wrapper(rootdir)
         try:
             runcmd(['chroot', rootdir, 'update-grub'])
-            runcmd(['chroot', rootdir, 'grub-install', grub_opts])
+            runcmd(['chroot', rootdir, 'grub-install'] + grub_opts)
         except cliapp.AppException as exc:
             logging.warning(exc)
             ret = False
@@ -134,7 +134,8 @@ class GrubHandler(Base):
             self.message("Adding grub target %s" % grub_opts)
             try:
                 runcmd(['chroot', rootdir, 'update-grub'])
-                runcmd(['chroot', rootdir, 'grub-install', grub_opts])
+                runcmd(['chroot', rootdir, 'grub-install', grub_opts,
+                        '--no-nvram'])
             except cliapp.AppException as exc:
                 logging.warning(exc)
                 ret = False
