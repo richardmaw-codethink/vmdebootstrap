@@ -105,6 +105,8 @@ class GrubHandler(Base):
     def install_grub_uefi(self, rootdir):
         ret = True
         self.message("Configuring grub-uefi")
+        if self.settings['serial-console']:
+            grub_serial_console(rootdir)
         target = arch_table[self.settings['arch']]['target']
         grub_opts = ["--target=%s" % target, "--no-nvram"]
         logging.debug("Running grub-install with options: %s", grub_opts)
