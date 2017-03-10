@@ -36,9 +36,9 @@ from vmdebootstrap.uefi import arch_table
 
 
 def grub_serial_console(rootdir):
-    cmdline = 'GRUB_CMDLINE_LINUX_DEFAULT="console=tty0 console=tty1 console=ttyS0,38400n8"'
+    cmdline = 'GRUB_CMDLINE_LINUX_DEFAULT="console=tty0 console=tty1 console=ttyS0,115200n8"'
     terminal = 'GRUB_TERMINAL="serial gfxterm"'
-    command = 'GRUB_SERIAL_COMMAND="serial --speed=38400 --unit=0 --parity=no --stop=1"'
+    command = 'GRUB_SERIAL_COMMAND="serial --speed=115200 --unit=0 --parity=no --stop=1"'
     grub_cfg = os.path.join(rootdir, 'etc', 'default', 'grub')
     logging.debug("Allowing serial output in grub config %s", grub_cfg)
     with open(grub_cfg, 'a+') as cfg:
