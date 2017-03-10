@@ -232,7 +232,7 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
             base.message("Creating swap space")
             runcmd(['mkswap', filesystem.devices['swapdev']])
         # stable or oldstable, use ^metadata_csum only for ext*
-        opt = None
+        opt = ''
         if distro.was_oldstable(datetime.date(2015, 4, 26)) or \
                 distro.was_stable(datetime.date(2015, 4, 26)):
             if self.settings['roottype'] in ['ext2', 'ext3', 'ext4']:

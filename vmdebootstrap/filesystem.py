@@ -133,12 +133,26 @@ class Filesystem(Base):
         self.devices['bootdev'] = boot
         self.devices['swap'] = swap
 
-    def mkfs(self, device, fstype, opt=None):
+    def mkfs(self, device, fstype, opt=''):
+        import re, subprocess
         self.message('Creating filesystem %s' % fstype)
-        if opt:
-            runcmd(['mkfs', '-t', fstype, '-O', opt, device])
-        else:
-            runcmd(['mkfs', '-t', fstype, device])
+
+        while opt != '':
+            argv = ['mkfs', '-t', fstype, '-O', opt, device]
+            logging.debug('runcmd: %s', argv)
+            proc = subprocess.Popen(
+		argv, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, env={})
+            out, err = proc.communicate('')
+            if proc.returncode == 0:
+                return
+            msg = 'command failed: %s\n%s\n%s' % (argv, out, err)
+            logging.error(msg)
+            m = re.search('Invalid filesystem option set: (.*)$', err, re.MULTILINE)
+            if not m:
+                raise cliapp.AppException(msg)
+            opt = ','.join(o for o in opt.split(',') if o != m.group(1))
+        runcmd(['mkfs', '-t', fstype, device])
 
     def create_fstab(self):
         rootdir = self.devices['rootdir']
